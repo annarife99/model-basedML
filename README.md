@@ -1,7 +1,7 @@
 Model-based MACHINE LEARNING
 ==============================
 
-+ The goal of this project is to build a predictive model in the field of transportation and logistics.
+The goal of this project is to build a predictive model in the field of transportation and logistics.
 We will forecast bike rental demand in the Capital Bikeshare program in Washington D.C by using
 historical usage patterns and weather data and we will be willing to answer the following questions:
 - What factors are the most significant predictors of bike rental demand in a bike-sharing system?
