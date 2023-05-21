@@ -17,6 +17,7 @@ from pyro.optim import Adam, ClippedAdam
 from pyro.infer import Predictive
 
 sns.set_style("whitegrid") 
+np.random.seed(42)
 
 from preprocessing import preprocessing_Xdata
 from utils import extract_datetime, one_hot_encode, compute_error, save_results_figures
@@ -51,9 +52,7 @@ def model(X, obs=None):
     return y
 
 
-def probabilistic_linear_regression(X_train_reg,Y_train,n_steps=10000):
-    np.random.seed(42)
-
+def probabilistic_linear_regression(X_train_reg,Y_train,n_steps=500):
     y_train_regression_torch = torch.tensor(Y_train).float()
 
     X_train_regression_np = np.array(X_train_reg)
@@ -80,18 +79,18 @@ def probabilistic_linear_regression(X_train_reg,Y_train,n_steps=10000):
         if step % 500 == 0:
             print("[%d] ELBO: %.1f" % (step, elbo))
 
-
+    
     predictive = Predictive(model, guide=guide, num_samples=1000, return_sites=("alpha", "beta"))
     samples = predictive(X_train_regression_torch, y_train_regression_torch)
 
     alpha_samples = samples["alpha"].detach().numpy()
     beta_samples = samples["beta"].detach().numpy()
     y_hat = np.round(np.mean(np.exp(alpha_samples.T + np.dot(X_train_regression_np, beta_samples[:,0].T)), axis=1))
-
     # convert back to the original scale
     preds = y_hat # no need to do any conversion here because the Poisson model received untransformed y's
 
     corr, mae, rae, rmse, r2 = compute_error(Y_train, preds)
+    print('anna6')
     print("CorrCoef: %.3f\nMAE: %.3f\nRMSE: %.3f\nR2: %.3f" % (corr, mae, rmse, r2))
     info={"CorrCoef":corr,"MAE":mae, "RMSE":rmse, "R2":r2, "n_steps":n_steps,"lr":lr}
 
