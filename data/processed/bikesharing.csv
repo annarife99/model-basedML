@@ -1,4 +1,4 @@
-date,hour,member,casual,total
+date,hour,registered,casual,count
 2010-09-20,11,2,0,2
 2010-09-20,12,17,0,17
 2010-09-20,13,11,0,11
